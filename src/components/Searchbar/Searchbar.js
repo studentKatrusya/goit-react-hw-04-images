@@ -1,52 +1,49 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import { Wrap, Form, Btn, Label, Input } from './Searchbar.styled';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default class SearchBar extends Component {
-  state = {
-    searchQuery: '',
-    page: 1,
+function SearchBar({ onSubmit }) {
+  // const [page, setPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleNameChange = event => {
+    setSearchQuery(event.currentTarget.value.toLowerCase());
   };
 
-  handleNameChange = event => {
-    this.setState({ searchQuery: event.currentTarget.value.toLowerCase() });
-  };
-
-  handleSubmit = event => {
+  const handleSubmit = event => {
     event.preventDefault();
 
-    if (this.state.searchQuery.trim() === '') {
+    if (searchQuery.trim() === '') {
       toast.info('Enter your request.');
-      return;
+    } else {
+      onSubmit(searchQuery);
+      setSearchQuery('');
     }
-
-    this.props.onSubmit(this.state.searchQuery, this.state.page);
-    // this.setState({ searchQuery: '', page: 1 });
   };
 
-  render() {
-    return (
-      <div>
-        <Wrap>
-          <Form onSubmit={this.handleSubmit}>
-            <Btn type="submit">
-              <Label>Search</Label>
-            </Btn>
+  return (
+    <div>
+      <Wrap>
+        <Form onSubmit={handleSubmit}>
+          <Btn type="submit">
+            <Label>Search</Label>
+          </Btn>
 
-            <Input
-              type="text"
-              // name="searchQuery"
-              value={this.state.searchQuery}
-              onChange={this.handleNameChange}
-              autoComplete="off"
-              autoFocus
-              placeholder="Search images and photos"
-            />
-          </Form>
-        </Wrap>
-        <ToastContainer autoClose={3000} theme={'colored'} />
-      </div>
-    );
-  }
+          <Input
+            type="text"
+            // name="searchQuery"
+            value={searchQuery}
+            onChange={handleNameChange}
+            autoComplete="off"
+            autoFocus
+            placeholder="Search images and photos"
+          />
+        </Form>
+      </Wrap>
+      <ToastContainer autoClose={3000} theme={'colored'} />
+    </div>
+  );
 }
+
+export default SearchBar;

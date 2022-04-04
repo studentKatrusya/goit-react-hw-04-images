@@ -3,14 +3,12 @@ const API_KEY = '24753082-868cb2bb63826684a408e0cdf';
 
 function fetchGallery(searchQuery, page) {
   return fetch(
-    `${BASE_URL}?q=${searchQuery}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
+    `${BASE_URL}?q=${searchQuery}&key=${API_KEY}&image_type=photo&orientation=horizontal&page=${page}&per_page=12`
   ).then(response => {
-    if (response.ok) {
-      return response.json();
+    if (response.status === 404) {
+      return Promise.reject('Oops, something went wrong');
     }
-    return Promise.reject(
-      new Error(`Did not find anything by request ${searchQuery}`)
-    );
+    return response.json();
   });
 }
 
